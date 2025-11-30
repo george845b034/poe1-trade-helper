@@ -3000,6 +3000,8 @@ export default {
           this.searchJson.query.filters.misc_filters.filters.foulborn_item = {
             "option": "true"
           }
+          // 重要：從物品名稱中移除「穢生」字樣，因為 API 不接受包含「穢生」的名稱
+          searchName = searchName.replace(/穢生\s*/g, '').trim() // 移除「穢生」及後續空格
         } else {
           // 非穢生物品不設定 foulborn_item 參數
           delete this.searchJson.query.filters.misc_filters.filters.foulborn_item
