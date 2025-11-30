@@ -430,6 +430,7 @@ import statsData from "../assets/poe/stats.json";
 import duplicateStatsData from "../assets/poe/duplicateStats.json";
 // import usStatsData from "../assets/poe/stats_us.json";
 import poedbTWJson from "../assets/poe/poedb-tw.json";
+import { APP_VERSION } from "../constants.js";
 
 const _ = require('lodash');
 const stringSimilarity = require('string-similarity');
@@ -446,6 +447,7 @@ export default {
   },
   data() {
     return {
+      version: APP_VERSION,
       clickCount: 0,
       searchTotal: 0,
       status: '',
@@ -1072,7 +1074,7 @@ export default {
           if (error.response.status === 429) {
             errMsg += `\n被 Server 限制發送需求了，請等待後再重試`
           }
-          vm.issueText = `Version: v1.326.0, Server: ${vm.storeServerString}\n此次搜尋異常！\n${errMsg}\n\`\`\`\n${vm.copyText.replace('稀有度: ', 'Rarity: ')}\`\`\``
+          vm.issueText = `Version: ${vm.version}, Server: ${vm.storeServerString}\n此次搜尋異常！\n${errMsg}\n\`\`\`\n${vm.copyText.replace('稀有度: ', 'Rarity: ')}\`\`\``
           vm.itemsAPI()
           vm.isSupported = false
           vm.isStatsCollapse = false
@@ -2970,6 +2972,8 @@ export default {
       });
       if (item.indexOf('物品種類: 異界地圖') > -1 || item.indexOf('釋界之邀：') > -1 || item.indexOf('物品種類: 契約書') > -1 || item.indexOf('物品種類: 藍圖') > -1 || item.indexOf('物品種類: 聖域研究') > -1) { // 類地圖搜尋
         this.mapAnalysis(item, itemArray, Rarity)
+      } else if (item.indexOf('物品種類: 接肢') > -1 && Rarity === "稀有") { // 接肢物品
+        this.searchJson.query.type = this.replaceString(itemBasic)
       } else if ((Rarity === "稀有" || Rarity === "傳奇") && item.indexOf('點擊右鍵將此加入你的獸獵寓言。') > -1) { // 獸獵（物品化怪物）
         let monstersCount = 0
         this.monstersItems.some(element => {
@@ -3103,7 +3107,7 @@ export default {
         return
       } else {
         this.itemsAPI()
-        this.issueText = `Version: v1.326.0\n尚未支援搜尋該道具\n\`\`\`\n${this.copyText.replace('稀有度: ', 'Rarity: ')}\`\`\``
+        this.issueText = `Version: ${this.version}\n尚未支援搜尋該道具\n\`\`\`\n${this.copyText.replace('稀有度: ', 'Rarity: ')}\`\`\``
         this.isSupported = false
         this.isStatsCollapse = false
         return

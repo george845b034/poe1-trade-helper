@@ -1,0 +1,3 @@
+// 應用程式版本號
+export const APP_VERSION = 'v2.0.0'
+
