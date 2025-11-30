@@ -2991,14 +2991,11 @@ export default {
           }
         }
         // 檢查是否為穢生傳奇物品
+        // 嘗試方式一：放在 query 根層級（根據 API 文檔 mutated 是 ?bool）
         if (item.indexOf('穢生') > -1) {
-          this.searchJson.query.filters.type_filters.filters.mutated = {
-            "option": "true"
-          }
+          this.searchJson.query.mutated = true
         } else {
-          this.searchJson.query.filters.type_filters.filters.mutated = {
-            "option": "false"
-          }
+          this.searchJson.query.mutated = false
         }
         if (item.indexOf('未鑑定') === -1) { // 已鑑定傳奇
           this.searchJson.query.name = this.replaceString(searchName)
