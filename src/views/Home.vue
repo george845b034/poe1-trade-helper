@@ -2991,14 +2991,15 @@ export default {
           }
         }
         // 檢查是否為穢生傳奇物品
-        // 放在 misc_filters 中（類似 corrupted 的設定方式，使用字串格式）
+        // 注意：根據官方文件，mutated 是 Item 物件的屬性，不是查詢過濾條件
+        // 無法在查詢時直接過濾 mutated 物品，但可以在結果中檢查物品的 mutated 屬性
+        // 當偵測到穢生物品時，顯示提示訊息
         if (item.indexOf('穢生') > -1) {
-          this.searchJson.query.filters.misc_filters.filters.mutated = {
-            "option": "true"  // 使用字串格式，與 corrupted 相同
-          }
-        } else {
-          // 非穢生物品不設定 mutated 參數
-          delete this.searchJson.query.filters.misc_filters.filters.mutated
+          this.$message({
+            duration: 3000,
+            type: 'info',
+            message: `偵測到穢生傳奇物品。注意：查詢結果可能包含非穢生版本，請在結果中查看物品的 mutated 屬性`
+          });
         }
         if (item.indexOf('未鑑定') === -1) { // 已鑑定傳奇
           this.searchJson.query.name = this.replaceString(searchName)
