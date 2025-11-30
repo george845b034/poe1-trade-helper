@@ -2991,15 +2991,18 @@ export default {
           }
         }
         // 檢查是否為穢生傳奇物品
-        // 注意：根據官方文件，mutated 是 Item 物件的屬性，不是查詢過濾條件
-        // 無法在查詢時直接過濾 mutated 物品，但可以在結果中檢查物品的 mutated 屬性
-        // 當偵測到穢生物品時，顯示提示訊息
+        // 使用 foulborn_item 過濾條件（從官方網站測試得知的正確參數名稱）
         if (item.indexOf('穢生') > -1) {
-          this.$message({
-            duration: 3000,
-            type: 'info',
-            message: `偵測到穢生傳奇物品。注意：查詢結果可能包含非穢生版本，請在結果中查看物品的 mutated 屬性`
-          });
+          // 確保 misc_filters 有 disabled 屬性（根據官方 payload 格式）
+          if (!this.searchJson.query.filters.misc_filters.hasOwnProperty('disabled')) {
+            this.searchJson.query.filters.misc_filters.disabled = false
+          }
+          this.searchJson.query.filters.misc_filters.filters.foulborn_item = {
+            "option": "true"
+          }
+        } else {
+          // 非穢生物品不設定 foulborn_item 參數
+          delete this.searchJson.query.filters.misc_filters.filters.foulborn_item
         }
         if (item.indexOf('未鑑定') === -1) { // 已鑑定傳奇
           this.searchJson.query.name = this.replaceString(searchName)
