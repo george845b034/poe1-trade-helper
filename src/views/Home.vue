@@ -2991,11 +2991,14 @@ export default {
           }
         }
         // 檢查是否為穢生傳奇物品
-        // 嘗試方式一：放在 query 根層級（根據 API 文檔 mutated 是 ?bool）
+        // 放在 misc_filters 中（類似 corrupted 的設定方式，使用字串格式）
         if (item.indexOf('穢生') > -1) {
-          this.searchJson.query.mutated = true
+          this.searchJson.query.filters.misc_filters.filters.mutated = {
+            "option": "true"  // 使用字串格式，與 corrupted 相同
+          }
         } else {
-          this.searchJson.query.mutated = false
+          // 非穢生物品不設定 mutated 參數
+          delete this.searchJson.query.filters.misc_filters.filters.mutated
         }
         if (item.indexOf('未鑑定') === -1) { // 已鑑定傳奇
           this.searchJson.query.name = this.replaceString(searchName)
